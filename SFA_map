@@ -1,0 +1,88 @@
+import matplotlib.pyplot as plt
+import cartopy.crs as ccrs
+import cartopy.feature as cfeature
+from datetime import datetime
+import pytz
+
+def create_game_time_map(game_location, game_time, cities):
+    # Create a new figure with a specific size
+    plt.figure(figsize=(15, 10))
+
+    # Create a map using Cartopy
+    ax = plt.axes(projection=ccrs.Robinson())
+
+    # Add map features
+    ax.add_feature(cfeature.LAND)
+    ax.add_feature(cfeature.OCEAN)
+    ax.add_feature(cfeature.COASTLINE)
+    ax.add_feature(cfeature.BORDERS, linestyle=':')
+
+    # Add game location
+    ax.plot(game_location['lon'], game_location['lat'], 
+            marker='*', color='red', markersize=7, 
+            transform=ccrs.Geodetic())
+    ax.text(game_location['lon'], game_location['lat'], 
+            f"{game_location['city']}\n{game_time.strftime('%I:%M %p')}", 
+            transform=ccrs.Geodetic(), ha='right', va='bottom', 
+            fontweight='bold', fontsize=10, color='red')
+
+    # Add cities and their times
+    for city in cities:
+        city_time = game_time.astimezone(pytz.timezone(city['timezone']))
+        ax.plot(city['lon'], city['lat'], marker='o', color='blue', 
+                markersize=5, transform=ccrs.Geodetic())
+        ax.text(city['lon'], city['lat'], 
+                f"{city['city']}\n{city_time.strftime('%I:%M %p')}", 
+                transform=ccrs.Geodetic(), ha='left', va='bottom', 
+                fontweight='bold', fontsize=6, color='blue')
+
+    # Set title
+    plt.title(f"Caledonian Braves vs Broxburn Athletic", 
+              fontsize=16)
+
+    # Save the map as a PNG file
+    plt.savefig("football_game_time_map.png", dpi=300, bbox_inches='tight')
+    plt.close()
+
+# Example usage
+game_location = {
+    'city': 'Alliance Park',
+    'lat': 55.8642,
+    'lon': -4.2518
+#     'city': 'K Park',
+#     'lat': 55.7503,
+#     'lon': -4.1485
+#     'city': 'Forthbank Stadium',
+#     'lat': 56.1190,
+#     'lon': -3.9129
+}
+
+game_time = datetime(2024, 10, 1, 20, 0)  # Example: September 14, 2024, 3:00 PM local time
+game_time = pytz.timezone('Europe/London').localize(game_time)
+
+cities = [
+    {'city': 'New York', 'lat': 40.7128, 'lon': -74.0060, 'timezone': 'America/New_York'},
+    {'city': 'Dallas', 'lat': 32.7767, 'lon': -96.7970, 'timezone': 'America/Chicago'},
+    {'city': 'Miami', 'lat': 25.7617, 'lon': -80.1918, 'timezone': 'America/New_York'},
+    {'city': 'Denver', 'lat': 39.7392, 'lon': -104.9903, 'timezone': 'America/Denver'},
+    {'city': 'Los Angeles', 'lat': 34.0522, 'lon': -118.2437, 'timezone': 'America/Los_Angeles'},
+    {'city': 'Portland', 'lat': 45.5155, 'lon': -122.6789, 'timezone': 'America/Los_Angeles'},
+    {'city': 'Toronto', 'lat': 43.6532, 'lon': -79.3832, 'timezone': 'America/Toronto'},
+    {'city': 'Atlanta', 'lat': 33.7488, 'lon': -84.3877, 'timezone': 'America/New_York'},
+    {'city': 'Pensacola', 'lat': 30.4213, 'lon': -87.2169, 'timezone': 'America/Chicago'},
+    {'city': 'San Francisco', 'lat': 37.7749, 'lon': -122.4194, 'timezone': 'America/Los_Angeles'},
+    {'city': 'Minneapolis', 'lat': 44.9778, 'lon': -93.2650, 'timezone': 'America/Chicago'},
+    {'city': 'Vancouver', 'lat': 49.2827, 'lon': -123.1207, 'timezone': 'America/Vancouver'},
+#    {'city': 'Honolulu', 'lat': 21.3069, 'lon': -157.8583, 'timezone': 'Pacific/Honolulu'},
+    {'city': 'Barcelona', 'lat': 41.3851, 'lon': 2.1734, 'timezone': 'Europe/Madrid'},
+#    {'city': 'Tokyo', 'lat': 35.6762, 'lon': 139.6503, 'timezone': 'Asia/Tokyo'},
+#    {'city': 'Sydney', 'lat': -33.8688, 'lon': 151.2093, 'timezone': 'Australia/Sydney'},
+#    {'city': 'Rio de Janeiro', 'lat': -22.9068, 'lon': -43.1729, 'timezone': 'America/Sao_Paulo'},
+    {'city': 'Nome', 'lat': 64.5006, 'lon': -165.4086, 'timezone': 'America/Nome'},
+#    {'city': 'Wellington', 'lat': -41.2924, 'lon': 174.7787, 'timezone': 'Pacific/Auckland'}
+]
+
+# Create the map
+create_game_time_map(game_location, game_time, cities)
+
+print("Map has been saved as 'football_game_time_map.png'")
