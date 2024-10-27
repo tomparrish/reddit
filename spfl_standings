@@ -1,0 +1,30 @@
+import http.client
+import json
+conn = http.client.HTTPSConnection("api.sportmonks.com")
+payload = ''
+headers = {}
+conn.request("GET", "/v3/football/standings/seasons/23690?api_token=xxxxxx&include=participant", payload, headers)
+res = conn.getresponse()
+data = res.read()
+#print(data.decode("utf-8"))
+
+
+# Parse through the data field which contains the teams
+response = json.loads(data)
+#teams = data["data"]
+print("# Scottish Premiership Standings")
+print("")
+print("| Pos | Team | Points |")
+print("|:---:|:-----|:------:|")
+print("| 1 | **"+response["data"][0]["participant"]["name"]+"** | "+str(response["data"][0]["points"])+" |")
+print("| 2 | **"+response["data"][1]["participant"]["name"]+"** | "+str(response["data"][1]["points"])+" |")
+print("| 3 | **"+response["data"][2]["participant"]["name"]+"** | "+str(response["data"][2]["points"])+" |")
+print("| 4 | "+response["data"][3]["participant"]["name"]+" | "+str(response["data"][3]["points"])+" |")
+print("| 5 | "+response["data"][4]["participant"]["name"]+" | "+str(response["data"][4]["points"])+" |")
+print("| 6 | "+response["data"][5]["participant"]["name"]+" | "+str(response["data"][5]["points"])+" |")
+print("| 7 | "+response["data"][6]["participant"]["name"]+" | "+str(response["data"][6]["points"])+" |")
+print("| 8 | "+response["data"][7]["participant"]["name"]+" | "+str(response["data"][7]["points"])+" |")
+print("| 9 | "+response["data"][8]["participant"]["name"]+" | "+str(response["data"][8]["points"])+" |")
+print("| 10 | "+response["data"][9]["participant"]["name"]+" | "+str(response["data"][9]["points"])+" |")
+print("| 11 | "+response["data"][10]["participant"]["name"]+" | "+str(response["data"][10]["points"])+" |")
+print("| 12 | "+response["data"][11]["participant"]["name"]+" | "+str(response["data"][11]["points"])+" |")
