@@ -1,9 +1,11 @@
 import http.client
 import json
+import os
 conn = http.client.HTTPSConnection("api.sportmonks.com")
 payload = ''
 headers = {}
-conn.request("GET", "/v3/football/standings/seasons/23690?api_token=Dz3qsmeBf6pgaVsKrp8nI8Nt53cxyzpgRS5TSgUZ1DwwPdUgfMRqivgjsvgG&include=participant", payload, headers)
+token=os.environ['Sportsmonks']
+conn.request("GET", "/v3/football/standings/seasons/23690?api_token="+token+"&include=participant", payload, headers)
 res = conn.getresponse()
 data = res.read()
 response = json.loads(data)
